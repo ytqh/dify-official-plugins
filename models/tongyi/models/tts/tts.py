@@ -1,6 +1,8 @@
+import logging
 import threading
 from queue import Queue
 from typing import Any, Optional
+
 import dashscope
 from dashscope import SpeechSynthesizer
 from dashscope.api_entities.dashscope_response import SpeechSynthesisResponse
@@ -142,5 +144,7 @@ class Callback(ResultCallback):
 
     def on_event(self, result: SpeechSynthesisResult):
         ad = result.get_audio_frame()
+        logging.info(f"tongyi tts raw response: {result.get_response()}")
+        logging.info(f"tongyi tts ad: {ad}")
         if ad:
             self._queue.put(ad)
