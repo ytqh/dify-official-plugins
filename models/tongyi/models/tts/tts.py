@@ -7,7 +7,8 @@ import dashscope
 from dashscope import SpeechSynthesizer
 from dashscope.api_entities.dashscope_response import SpeechSynthesisResponse
 from dashscope.audio.tts import ResultCallback, SpeechSynthesisResult
-from dify_plugin.errors.model import CredentialsValidateFailedError, InvokeBadRequestError
+from dify_plugin.errors.model import (CredentialsValidateFailedError,
+                                      InvokeBadRequestError)
 from dify_plugin.interfaces.model.tts_model import TTSModel
 from models._common import _CommonTongyi
 
@@ -80,7 +81,7 @@ class TongyiText2SpeechModel(_CommonTongyi, TTSModel):
                 for sentence in sentences:
                     SpeechSynthesizer.call(
                         model=v,
-                        sample_rate=16000,
+                        sample_rate=32000,
                         api_key=api_key,
                         text=sentence.strip(),
                         callback=cb,
