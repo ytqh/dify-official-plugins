@@ -4,7 +4,10 @@ label:
   en_US: o3
 model_type: llm
 features:
+  - multi-tool-call
   - agent-thought
+  - stream-tool-call
+  - vision
 model_properties:
   mode: chat
   context_size: 200000

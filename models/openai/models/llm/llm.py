@@ -714,7 +714,6 @@ class OpenAILargeLanguageModel(_CommonOpenAI, LargeLanguageModel):
         # clear illegal prompt messages
         prompt_messages = self._clear_illegal_prompt_messages(model, prompt_messages)
 
-        # o1, o3, o4 compatibility
         block_as_stream = False
         if model.startswith(O_SERIES_COMPATIBILITY):
             if "max_tokens" in model_parameters:
@@ -722,13 +721,6 @@ class OpenAILargeLanguageModel(_CommonOpenAI, LargeLanguageModel):
                     "max_tokens"
                 ]
                 del model_parameters["max_tokens"]
-
-            if re.match(r"^o1(-\d{4}-\d{2}-\d{2})?$", model):
-                if stream:
-                    block_as_stream = True
-                    stream = False
-                    if "stream_options" in extra_model_kwargs:
-                        del extra_model_kwargs["stream_options"]
 
             if "stop" in extra_model_kwargs:
                 del extra_model_kwargs["stop"]
@@ -1092,23 +1084,6 @@ class OpenAILargeLanguageModel(_CommonOpenAI, LargeLanguageModel):
                                     for item in prompt_message.content
                                 ]
                             )
-
-        # o1, o3 compatibility
-        if model.startswith(O_SERIES_COMPATIBILITY):
-            system_message_count = len(
-                [m for m in prompt_messages if isinstance(m, SystemPromptMessage)]
-            )
-            if system_message_count > 0:
-                new_prompt_messages = []
-                for prompt_message in prompt_messages:
-                    if isinstance(prompt_message, SystemPromptMessage):
-                        prompt_message = UserPromptMessage(
-                            content=prompt_message.content,
-                            name=prompt_message.name,
-                        )
-
-                    new_prompt_messages.append(prompt_message)
-                prompt_messages = new_prompt_messages
 
         return prompt_messages
 
